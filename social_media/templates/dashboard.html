@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automation Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <body>
+        <header>
+            <h1>Automation Dashboard</h1>
+            <nav>
+                <button onclick="showSection('socialMediaSection')">Social Media Scheduler</button>
+                <button onclick="showSection('webScrapingSection')">Web Scraping</button>
+                <button onclick="showSection('automatedTestingSection')">Automated Testing</button>
+            </nav>
+        </header>
+    
+        <main>
+            <!-- Social Media Scheduler Section -->
+            <section id="socialMediaSection" class="content-section">
+                <h2>Social Media Scheduler</h2>
+                <form method="post" action="{% url 'social_media:schedule_post' %}">
+                    {% csrf_token %}
+                    {{ social_media_form.as_p }}
+                    <button type="submit">Schedule Post</button>
+                </form>
+                <h3>Scheduled Posts</h3>
+                <ul>
+                    {% for post in social_media_posts %}
+                        <li>{{ post.platform }}: {{ post.content }} - {{ post.scheduled_time }} ({{ post.status }})</li>
+                    {% endfor %}
+                </ul>
+            </section>
+    
+            <!-- Web Scraping Section -->
+            <section id="webScrapingSection" class="content-section" style="display: none;">
+                <h2>Web Scraping</h2>
+                <form method="post" action="{% url 'web_scraping:add_task' %}">
+                    {% csrf_token %}
+                    {{ web_scraping_form.as_p }}
+                    <button type="submit">Add Scraping Task</button>
+                </form>
+                <h3>Existing Scraping Tasks</h3>
+                <ul>
+                    {% for task in scraping_tasks %}
+                        <li>{{ task.url }} - Last Scraped: {{ task.last_scraped_at }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+    
+            <!-- Automated Testing Section -->
+            <section id="automatedTestingSection" class="content-section" style="display: none;">
+                <h2>Automated Testing</h2>
+                <form method="post" action="{% url 'automated_testing:add_test' %}">
+                    {% csrf_token %}
+                    {{ automated_testing_form.as_p }}
+                    <button type="submit">Add Test</button>
+                </form>
+                <h3>Tests</h3>
+                <ul>
+                    {% for test in automated_tests %}
+                        <li>{{ test.name }} - {{ test.url }} - Last Run: {{ test.last_run }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </main>
+    
+        <script src="{% static 'js/script.js' %}"></script> <!-- Place script here -->
+    </body>
+    
